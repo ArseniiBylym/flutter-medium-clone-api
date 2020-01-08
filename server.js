@@ -9,7 +9,6 @@ const KEYS = require('./config')
 const MONGO_DB_URI = KEYS.module.MONGO_DB_URI;
 const PORT = process.env.PORT || 5000;
 const app = express();
-    console.log('test', MONGO_DB_URI)
 
 const authRoutes = require('./routes/auth.routes');
 const usersRoutes = require('./routes/users.routes');
@@ -25,7 +24,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/articles', articlesRoutes);
 
-app.use(express.static('static'))
+// static files
+app.use(express.static('static'));
+
 // error handling
 app.use((err, req, res, next) => {
     const {statusCode = 500, message, errors} = err;

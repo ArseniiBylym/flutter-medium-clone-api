@@ -53,13 +53,12 @@ exports.deleteArticle = async (req, res, next) => {
     res.status(200).json(deletedArticle);
 }
 
-exports.likesArticle = async (req, res, next) => {
+exports.likeArticle = async (req, res, next) => {
     const {articleId} = req.body;
     const updatedArticle = await Article.findOneAndUpdate(
         {_id: articleId},
         {
-            $addToSet: {likes: req.user._id},
-            $inc: {likesLength: 1}
+            $addToSet: {likes: req.user._id}
         },
         {new: true, runValidators: true},
     )
@@ -68,6 +67,38 @@ exports.likesArticle = async (req, res, next) => {
         {$addToSet: {likes: articleId}}
     )
     res.status(200).json(updatedArticle);
+}
+
+exports.unlikeArticle = async (req, res, next) => {
+    const {articleId} = req.body;
+    const updatedArticle = await Article.findOneAndUpdate(
+        {_id: articleId},
+        {$pull: {likes: req.user._id}},
+        {new: true, runValidators: true},
+    )
+    await User.findOneAndUpdate(
+        {_id: req.user._id},
+        {$pull: {likes: articleId}}
+    )
+    res.status(200).json(updatedArticle);
+}
+
+exports.addToBookmarks = async (req, res, next) => {
+    const {articleId} = req.params;
+    await User.findOneAndUpdate(
+        {_id: req.user._id},
+        {$addToSet: {bookmarks: articleId}}
+    )
+    res.status(200).json(true);
+}
+
+exports.removeFromBookmarks = async (req, res, next) => {
+    const {articleId} = req.params;
+    await User.findOneAndUpdate(
+        {_id: req.user._id},
+        {$pull: {bookmarks: articleId}}
+    )
+    res.status(200).json(true);
 }
 
 exports.addComment = async (req, res, next) => {

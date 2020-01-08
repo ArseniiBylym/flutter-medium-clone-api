@@ -10,13 +10,20 @@ exports.getUsers = async (req, res, next) => {
 
 exports.getUser = async (req, res, next) => {
     const _id = req.params.userId;
+    const isSelf = req.user && req.user._id === _id;
     const user = await User.findById(_id)
-        .populate('articles', '_id title subTitle image createdAt')
-        .populate('likes', '_id title subTitle image createdAt')
+        .populate('articles', '_id title description image createdAt')
+        .populate('likes', '_id title description image createdAt')
         .populate('follow', '_id name avatar email')
         .populate('followed', '_id name avatar email');
     if (!user) {
         return res.status(400).json('User not found');
+    }
+    if (isSelf) {
+        await User.populate(user, {
+            path: 'bookmarks',
+            select: '_id title image'
+        })
     }
     res.status(200).json(user.withoutPassword());
 }
@@ -29,6 +36,7 @@ exports.updateUser = async (req, res, next) => {
     )
         .populate('articles', '_id title image createdAt')
         .populate('likes', '_id title image createdAt')
+        .populate('bookmarks', '_id title image')
         .populate('follow', '_id name avatar')
         .populate('followed', '_id name avatar');
     if (!user) {

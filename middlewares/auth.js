@@ -25,3 +25,18 @@ exports.isOwner = (req, res, next) => {
     }
     next()
 }
+
+exports.getUserId = (req, res, next) => {
+    let token = req.header('Authorization');
+    if (token) {
+        token = token.split(' ')[1];
+    } else {
+       next();
+    }
+    try {
+        const decodedToken = jwt.verify(token, JWT_SECRET_KEY);
+        req.user = decodedToken;
+    } finally {
+        next();
+    }
+}

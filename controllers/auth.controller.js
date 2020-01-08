@@ -19,10 +19,11 @@ exports.login = async (req, res, next) => {
     try {
         const {email, password} = req.body;
         const user = await User.findOne({email})
-            .populate('articles', '_id title image createdAt')
-            .populate('likes', '_id title image createdAt')
-            .populate('followed', '_id name avatar')
-            .populate('follow', '_id name avatar');
+            // .populate('articles', '_id title image createdAt')
+            // .populate('likes', '_id title image createdAt')
+            // .populate('bookmarks', '_id title image')
+            // .populate('followed', '_id name avatar')
+            // .populate('follow', '_id name avatar');
         if (!user) {
             res.status(400).json('Wrong email');
         }

@@ -9,10 +9,17 @@ router.route('/')
         .get(articlesController.getArticles)
         .post(isAuth, articlesController.postArticle);
 
-router.route('/likes')
-        .put(isAuth, articlesController.likesArticle);
+router.route('/like')
+        .put(isAuth, articlesController.likeArticle);
 
-router.route('/comment/')
+router.route('/unlike')
+        .put(isAuth, articlesController.unlikeArticle);
+
+router.route('/bookmark/:articleId')
+        .put(isAuth, articlesController.addToBookmarks)
+        .delete(isAuth, articlesController.removeFromBookmarks)
+
+router.route('/comment')
         .put(isAuth, articlesController.addComment);
 
 router.route('/comment/:commentId')
