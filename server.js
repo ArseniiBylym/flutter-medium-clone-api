@@ -1,0 +1,43 @@
+const path = require(`path`);
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const cors = require('cors');
+
+const KEYS = require('./config')
+const MONGO_DB_URI = KEYS.module.MONGO_DB_URI;
+const PORT = process.env.PORT || 5000;
+const app = express();
+    console.log('test', MONGO_DB_URI)
+
+const authRoutes = require('./routes/auth.routes');
+const usersRoutes = require('./routes/users.routes');
+const articlesRoutes = require('./routes/articles.routes');
+
+// middlewares
+app.use(helmet());
+app.use(bodyParser.json());
+app.use(cors());
+
+// main routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/articles', articlesRoutes);
+
+app.use(express.static('static'))
+// error handling
+app.use((err, req, res, next) => {
+    const {statusCode = 500, message, errors} = err;
+    return res.status(statusCode).json({message, errors});
+});
+
+mongoose
+    .connect(MONGO_DB_URI, {useNewUrlParser: true})
+    .then(() => {
+        app.listen(PORT);
+        console.log(`Server listening on port ${PORT}`);
+    })
+    .catch(error => {
+        console.log('Connection error', error)
+    });
