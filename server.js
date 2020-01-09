@@ -5,8 +5,8 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cors = require('cors');
 
-const KEYS = require('./config')
-const MONGO_DB_URI = KEYS.module.MONGO_DB_URI;
+// const KEYS = require('./config')
+// const MONGO_DB_URI = KEYS.module.MONGO_DB_URI;
 const PORT = process.env.PORT || 5000;
 const app = express();
 
@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
 });
 
 mongoose
-    .connect(MONGO_DB_URI, {useNewUrlParser: true})
+    .connect(process.env.MONGO_DB_URI, {useNewUrlParser: true})
     .then(() => {
         app.listen(PORT);
         console.log(`Server listening on port ${PORT}`);

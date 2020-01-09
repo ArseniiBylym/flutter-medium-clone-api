@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const KEYS = require('../config');
-const {JWT_SECRET_KEY} = KEYS.module;
+// const KEYS = require('../config');
+// const {JWT_SECRET_KEY} = KEYS.module;
 
 exports.isAuth = (req, res, next) => {
     let token = req.header('Authorization');
@@ -11,7 +11,7 @@ exports.isAuth = (req, res, next) => {
     }
     
     try {
-        const decodedToken = jwt.verify(token, JWT_SECRET_KEY);
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.user = decodedToken;
         next();
     } catch (error) {
@@ -34,7 +34,7 @@ exports.getUserId = (req, res, next) => {
        next();
     }
     try {
-        const decodedToken = jwt.verify(token, JWT_SECRET_KEY);
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.user = decodedToken;
     } finally {
         next();

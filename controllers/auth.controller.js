@@ -1,7 +1,7 @@
 const {validationResult} = require('express-validator');
 const bcrypt = require('bcryptjs');
-const KEYS = require('../config');
-const {JWT_EXPIRATION_TIME, JWT_SECRET_KEY} = KEYS.module;
+// const KEYS = require('../config');
+// const {JWT_EXPIRATION_TIME, JWT_SECRET_KEY} = KEYS.module;
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 
@@ -31,7 +31,7 @@ exports.login = async (req, res, next) => {
         if (!isPasswordMatches) {
             res.status(400).json('Wrong password');
         }
-        const token = jwt.sign({_id: user._id}, JWT_SECRET_KEY, {expiresIn: JWT_EXPIRATION_TIME});
+        const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET_KEY, {expiresIn: process.env.JWT_EXPIRATION_TIME});
 
         // res.cookie('token', `Bearer ${token}`, {httpOnly: true});
         res.status(200).json({user: user.withoutPassword(), token});
@@ -45,7 +45,7 @@ exports.register = async (req, res, next) => {
         const {name, email, password} = req.body;
         const encryptedPassword = await bcrypt.hash(password, 10);
         const user = await new User({name, email, password: encryptedPassword}).save();
-        const token = jwt.sign({_id: user._id.toString()}, JWT_SECRET_KEY, {expiresIn: JWT_EXPIRATION_TIME});
+        const token = jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET_KEY, {expiresIn: process.env.JWT_EXPIRATION_TIME});
 
         res.cookie('token', `Bearer ${token}`, {httpOnly: true});
         res.status(201).json({user: user.withoutPassword(), token});
