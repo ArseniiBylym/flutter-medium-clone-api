@@ -115,7 +115,7 @@ exports.addComment = async (req, res, next) => {
 exports.removeComment = async (req, res, next) => {
     const {commentId} = req.params;
     const {articleId} = req.body;
-    const article = await Article.findOneAndUpdate(
+    await Article.findOneAndUpdate(
         {_id: articleId},
         {$pull: {comments: {_id: commentId}}},
         {new: true, runValidators: true},
