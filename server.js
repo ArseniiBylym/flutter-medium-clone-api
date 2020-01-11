@@ -1,12 +1,11 @@
-const path = require(`path`);
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const cors = require('cors');
-
-// const KEYS = require('./config')
-// const MONGO_DB_URI = KEYS.module.MONGO_DB_URI;
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 const PORT = process.env.PORT || 5000;
 const app = express();
 
