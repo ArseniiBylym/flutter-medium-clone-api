@@ -5,8 +5,8 @@ const {isAuth} = require('../middlewares/auth');
 
 const router = Router();
 
-router.route('/session')
-        .get(isAuth, authController.session);
+router.route('/me')
+        .get(isAuth, authController.me);
 
 router.route('/register')
         .post(userRegister, authController.validatorHandler, authController.register);

@@ -4,7 +4,7 @@ const User = require('../models/User.model');
 exports.getArticles = async (req, res, next) => {
     const sortBy = req.query.sortBy || 'createdAt';
     const order = req.query.order === '0' ? '' : '-';
-    const articles = await Article.find().select('-text -comments').sort(`${order}${sortBy}`).populate('author', '_id name avatar');
+    const articles = await Article.find().select('text image').sort(`${order}${sortBy}`).populate('author', '_id name avatar');
     res.status(200).json(articles);
 }
 

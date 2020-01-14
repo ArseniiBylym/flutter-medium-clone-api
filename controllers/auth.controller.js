@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.model');
 
-exports.session = async (req, res, next) => {
+exports.me = async (req, res, next) => {
     try {
         const user = await User.findById(req.user._id);
         if (!user) throw Error('User not found');
